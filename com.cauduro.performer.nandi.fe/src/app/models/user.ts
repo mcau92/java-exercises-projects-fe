@@ -1,7 +1,7 @@
 
 export interface User{
-    userId:String;
-    name:String;
-    surname:String;
-    cf:String;
+    userId:string;
+    name:string;
+    surname:string;
+    cf:string;
 }

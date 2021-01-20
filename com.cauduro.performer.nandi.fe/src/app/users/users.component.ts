@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../models/user'
-import { Observable } from 'rxjs';
+import { User } from '../models/user';
 import { UserService } from '../service/user/user.service';
-import { MessageService } from '../service/messages/message.service';
+import { UserDetailComponent } from '../user-detail/user-detail.component';
 
 
 @Component({
@@ -12,23 +11,21 @@ import { MessageService } from '../service/messages/message.service';
 })
 export class UsersComponent implements OnInit {
   users: User[];
-  selectedUser: User;
-  constructor(private userService:UserService, private messageService: MessageService) { }
+  constructor(private userService:UserService) { }
 
   ngOnInit(): void {
     this.userService.findAll().subscribe(data=>this.users=data);
   }
-
-  onSelect(user: User): void {
-    if(this.selectedUser!=null && this.selectedUser==user){
-      this.messageService.clear;
-      this.selectedUser=null;
-    }else{
-      this.selectedUser = user;
-      this.messageService.add(`UserComponent: Selected user id=${this.selectedUser.userId}`);
-    }
-    
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.userService.addUser({ name } as User)
+      .subscribe(hero => {
+        this.users.push(hero);
+      });
   }
-
-
+  delete(user: User): void {
+    this.users = this.users.filter(u => u !== user);
+    this.userService.deleteUser(user.userId).subscribe();
+  }
 }
