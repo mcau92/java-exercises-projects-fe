@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { User } from '../models/user';
 import { UserService } from '../service/user/user.service';
 import { UserDetailComponent } from '../user-detail/user-detail.component';
@@ -11,15 +11,24 @@ import { UserDetailComponent } from '../user-detail/user-detail.component';
 })
 export class UsersComponent implements OnInit {
   users: User[];
+  innerWidth:number;
   constructor(private userService:UserService) { }
 
   ngOnInit(): void {
+    this.innerWidth = window.innerWidth;
     this.userService.findAll().subscribe(data=>this.users=data);
   }
-  add(name: string): void {
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerWidth = window.innerWidth;
+  }
+
+  //data operation
+  add(name: string,surname: string): void {
     name = name.trim();
-    if (!name) { return; }
-    this.userService.addUser({ name } as User)
+    surname= surname.trim();
+    if (!name|| !surname) { return; }
+    this.userService.addUser({ name,surname } as User)
       .subscribe(hero => {
         this.users.push(hero);
       });
