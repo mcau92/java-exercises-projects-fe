@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../models/user'
-import { v4 as uuid } from 'uuid';
+import { Observable } from 'rxjs';
+import { UserService } from '../service/user/user.service';
 
 
 @Component({
@@ -9,10 +10,13 @@ import { v4 as uuid } from 'uuid';
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-  
-  constructor() { }
+  users: User[];
+  constructor(private userService:UserService) { }
 
   ngOnInit(): void {
+    this.userService.findAll().subscribe(data=>this.users=data);
   }
+
+
 
 }

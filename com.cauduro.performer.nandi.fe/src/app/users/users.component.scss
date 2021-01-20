@@ -1,0 +1,16 @@
+.card.my-5 {
+    height: 100%;
+    margin: 0 auto;
+    border: 1px solid blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: lightgrey;
+}
+td{
+    text-align: center;
+}
+
