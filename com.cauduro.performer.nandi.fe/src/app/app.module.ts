@@ -6,11 +6,15 @@ import { AppComponent } from './app.component';
 import { UsersComponent } from './users/users.component';
 import { UserService } from './service/user/user.service';
 import { HttpClientModule } from '@angular/common/http';
+import { UserDetailComponent } from './user-detail/user-detail.component';
+import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UsersComponent
+    UsersComponent,
+    UserDetailComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
