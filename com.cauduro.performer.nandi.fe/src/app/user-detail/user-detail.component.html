@@ -6,7 +6,8 @@
       <input [(ngModel)]="selectedUser.name"  placeholder="name" />
     </label>
   </div>
+  <input type="file" onclick="this.selectedFile = null" (change)="onFileChanged($event)">
+  <input type="button" (click)="onUpload()" value="upload">
 
-  <button (click)="goBack()">go back</button>
   <button (click)="save()">save</button>
 </div>

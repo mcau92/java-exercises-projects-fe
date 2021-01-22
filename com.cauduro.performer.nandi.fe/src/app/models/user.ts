@@ -4,4 +4,5 @@ export interface User{
     name:string;
     surname:string;
     cf:string;
+    imageModel:string;
 }

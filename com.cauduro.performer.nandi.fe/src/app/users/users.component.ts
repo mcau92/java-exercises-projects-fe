@@ -1,7 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Byte } from '@angular/compiler/src/util';
+import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { User } from '../models/user';
 import { UserService } from '../service/user/user.service';
-import { UserDetailComponent } from '../user-detail/user-detail.component';
 
 
 @Component({
@@ -11,16 +12,18 @@ import { UserDetailComponent } from '../user-detail/user-detail.component';
 })
 export class UsersComponent implements OnInit {
   users: User[];
-  innerWidth:number;
-  constructor(private userService:UserService) { }
+  selectedUser:User;
+  constructor(private userService:UserService,private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    this.innerWidth = window.innerWidth;
     this.userService.findAll().subscribe(data=>this.users=data);
   }
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.innerWidth = window.innerWidth;
+  selectUser(user:User){
+    if(this.selectedUser!=null && this.selectedUser==user){
+      this.selectedUser=null;
+    }else{
+      this.selectedUser=user;
+    }
   }
 
   //data operation
@@ -36,5 +39,14 @@ export class UsersComponent implements OnInit {
   delete(user: User): void {
     this.users = this.users.filter(u => u !== user);
     this.userService.deleteUser(user.userId).subscribe();
+  }
+  convertImage(image:string) :SafeUrl{
+    let objectURL = 'data:image/jpeg;base64,' + image;
+    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
+  }
+
+  //insert user popup
+  openInsertUserWindow(){
+    
   }
 }

@@ -15,6 +15,9 @@ export class UserService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
+  multipartHeader={
+    headers: new HttpHeaders({'Content-Type': 'multipart/form-data'})
+  }
 
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
@@ -43,6 +46,11 @@ export class UserService {
   public addUser(selectedUser: User): Observable<User> {
     return this.http.post(this.usersUrl + '/insertUser', selectedUser, this.httpOptions).pipe(
       catchError(this.handleError<any>('insertUser'))
+    );
+  }
+  public uploadImage(uploadData:FormData,id:string): Observable<any>{
+    return this.http.put(this.usersUrl+'/uploadImage/'+id, uploadData,this.multipartHeader).pipe(
+      catchError(this.handleError<any>('uploadImage'))
     );
   }
 

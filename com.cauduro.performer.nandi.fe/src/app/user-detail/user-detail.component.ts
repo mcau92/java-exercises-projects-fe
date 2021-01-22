@@ -9,25 +9,47 @@ import { Location } from '@angular/common';
   styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent implements OnInit {
-  selectedUser: User;
+  @Input() selectedUser: User;
   constructor(
-    private route: ActivatedRoute,
     private userService: UserService,
-    private location: Location
   ) { }
   ngOnInit(): void {
-    this.getUser();
-  }
-  getUser(): void {
-    const id: string = this.route.snapshot.paramMap.get('userId');
-    this.userService.getUser(id)
-      .subscribe(user => this.selectedUser = user);
   }
   save(): void {
-    this.userService.updateUser(this.selectedUser)
-      .subscribe(() => this.goBack());
+    this.userService.updateUser(this.selectedUser);
   }
-  goBack(): void {
-    this.location.back();
+  //image
+  public selectedFile;
+  public event1;
+  imgURL: any;
+  receivedImageData: any;
+  base64Data: any;
+  convertedImage: any;
+
+  public onFileChanged(event) {
+    this.selectedFile = event.target.files[0];
+    // Below part is used to display the selected image
+    let reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = (event2) => {
+      this.imgURL = reader.result;
+    };
+
+  }
+  onUpload() {
+    const uploadData = new FormData();
+    uploadData.append('myFile', this.selectedFile, this.selectedFile.name);
+    this.userService.uploadImage(uploadData,this.selectedUser.userId)
+      .subscribe(
+        res => {
+          console.log(res);
+          this.receivedImageData = res;
+          this.base64Data = this.receivedImageData.pic;
+          this.convertedImage = 'data:image/jpeg;base64,' + this.base64Data;
+        },
+        err => console.log('Error Occured duringng saving: ' + err)
+      );
+
+
   }
 }
