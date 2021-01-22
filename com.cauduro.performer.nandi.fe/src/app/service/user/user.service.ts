@@ -49,7 +49,7 @@ export class UserService {
     );
   }
   public uploadImage(uploadData:FormData,id:string): Observable<any>{
-    return this.http.put(this.usersUrl+'/uploadImage/'+id, uploadData,this.multipartHeader).pipe(
+    return this.http.post(this.usersUrl+'/uploadImage/'+id, uploadData).pipe(
       catchError(this.handleError<any>('uploadImage'))
     );
   }

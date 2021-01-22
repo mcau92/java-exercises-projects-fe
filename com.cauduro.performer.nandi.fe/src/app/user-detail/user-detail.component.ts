@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../models/user';
 import { UserService } from '../service/user/user.service';
@@ -10,6 +10,11 @@ import { Location } from '@angular/common';
 })
 export class UserDetailComponent implements OnInit {
   @Input() selectedUser: User;
+  //image
+  @ViewChild('valueFile')
+  public valueFile: ElementRef;
+  public selectedFile = null;
+
   constructor(
     private userService: UserService,
   ) { }
@@ -18,38 +23,25 @@ export class UserDetailComponent implements OnInit {
   save(): void {
     this.userService.updateUser(this.selectedUser);
   }
-  //image
-  public selectedFile;
-  public event1;
-  imgURL: any;
-  receivedImageData: any;
-  base64Data: any;
-  convertedImage: any;
 
   public onFileChanged(event) {
     this.selectedFile = event.target.files[0];
-    // Below part is used to display the selected image
-    let reader = new FileReader();
-    reader.readAsDataURL(event.target.files[0]);
-    reader.onload = (event2) => {
-      this.imgURL = reader.result;
-    };
-
   }
   onUpload() {
     const uploadData = new FormData();
-    uploadData.append('myFile', this.selectedFile, this.selectedFile.name);
-    this.userService.uploadImage(uploadData,this.selectedUser.userId)
+    uploadData.append('image', this.selectedFile);
+    uploadData.append("reportProgress", "true");
+
+    this.userService.uploadImage(uploadData, this.selectedUser.userId)
       .subscribe(
         res => {
           console.log(res);
-          this.receivedImageData = res;
-          this.base64Data = this.receivedImageData.pic;
-          this.convertedImage = 'data:image/jpeg;base64,' + this.base64Data;
+
         },
         err => console.log('Error Occured duringng saving: ' + err)
       );
-
+    this.valueFile.nativeElement.value=null;
+    this.selectedFile=null
 
   }
 }
